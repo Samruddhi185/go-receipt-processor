@@ -5,7 +5,7 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY fetch-receipt-processor/*.go ./
+COPY app/*.go ./
 
 RUN go build -o /receipt-processor
 

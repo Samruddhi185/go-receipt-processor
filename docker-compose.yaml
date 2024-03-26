@@ -1,3 +1,6 @@
 services:
   backend:
-    
+    container_name: receipt-processor
+    image: "fetch-receipt-processor:latest"
+    ports:
+      - '8000:8000'

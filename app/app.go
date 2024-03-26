@@ -52,9 +52,12 @@ func (s *Server) handleReceiptProcess(w http.ResponseWriter, r *http.Request) er
 		return WriteJSON(w, http.StatusBadRequest, "The receipt is invalid")
 	}
 
+	points := getPointsFromReceipt(&receipt)
 	id := generateNewReceiptId()
-	receiptMap[id] = 0
-	return WriteJSON(w, http.StatusOK, id)
+	receiptMap[id] = points
+
+	response := ReceiptId{Id: id}
+	return WriteJSON(w, http.StatusOK, response)
 }
 
 func (s *Server) handleReceiptGetPoints(w http.ResponseWriter, r *http.Request) error {
@@ -70,7 +73,8 @@ func (s *Server) handleReceiptGetPoints(w http.ResponseWriter, r *http.Request) 
 		return WriteJSON(w, http.StatusNotFound, "No receipt found for this id")
 	}
 
-	return WriteJSON(w, http.StatusOK, points)
+	response := Points{Points: points}
+	return WriteJSON(w, http.StatusOK, response)
 }
 
 func makeHTTPHandlerFunc(h apiHandler) http.HandlerFunc {

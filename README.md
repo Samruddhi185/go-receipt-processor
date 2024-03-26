@@ -5,7 +5,7 @@
 1) Clone (or download) this repo to the machine where the app will be run. Open a terminal and change directory to the project home folder (go-receipt-processor/)
 
 2) Build a docker image\
-Ensure docker daemon is runnning on the machine.\
+Ensure docker daemon is running on the machine.\
 Use below command to build a docker image which contains the code and associated dependencies to run the app.
 ```
 docker build -t go-receipt-processor:latest .

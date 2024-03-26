@@ -4,9 +4,14 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"net/url"
+	"strings"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 )
+
+var receiptMap map[string]int = make(map[string]int)
 
 type Server struct {
 	listenPort string
@@ -47,11 +52,25 @@ func (s *Server) handleReceiptProcess(w http.ResponseWriter, r *http.Request) er
 		return WriteJSON(w, http.StatusBadRequest, "The receipt is invalid")
 	}
 
-	return WriteJSON(w, http.StatusOK, err)
+	id := generateNewReceiptId()
+	receiptMap[id] = 0
+	return WriteJSON(w, http.StatusOK, id)
 }
 
 func (s *Server) handleReceiptGetPoints(w http.ResponseWriter, r *http.Request) error {
-	return nil
+	path, err := url.Parse(r.URL.String())
+	if err != nil {
+		return WriteJSON(w, http.StatusBadRequest, "Could not parse URL")
+	}
+
+	splitPath := strings.Split(path.String(), "/")
+	id := splitPath[2]
+	points, found := receiptMap[id]
+	if !found {
+		return WriteJSON(w, http.StatusNotFound, "No receipt found for this id")
+	}
+
+	return WriteJSON(w, http.StatusOK, points)
 }
 
 func makeHTTPHandlerFunc(h apiHandler) http.HandlerFunc {
@@ -60,6 +79,10 @@ func makeHTTPHandlerFunc(h apiHandler) http.HandlerFunc {
 			WriteJSON(w, http.StatusInternalServerError, ApiError{Error: err.Error()})
 		}
 	}
+}
+
+func generateNewReceiptId() string {
+	return uuid.New().String()
 }
 
 func WriteJSON(w http.ResponseWriter, status int, v any) error {

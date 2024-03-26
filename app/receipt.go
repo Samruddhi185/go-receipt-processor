@@ -27,7 +27,6 @@ func getPointsFromRetailerName(receipt *Receipt) int {
 			points += 1
 		}
 	}
-	log.Println("points from retailer name: ", points)
 	return points
 }
 
@@ -44,7 +43,6 @@ func getPointsFromTotal(receipt *Receipt) int {
 		(total+0.75) == float64(int32(total+0.75)) {
 		points += 25
 	}
-	log.Println("points from total: ", points)
 	return points
 }
 
@@ -58,7 +56,6 @@ func getPointsFromItems(receipt *Receipt) int {
 			points += int(math.Ceil(price * 0.2))
 		}
 	}
-	log.Println("points from items: ", points)
 	return points
 }
 
@@ -68,7 +65,6 @@ func getPointsFromPurchaseDate(receipt *Receipt) int {
 	if purchaseDate%2 == 1 {
 		points += 6
 	}
-	log.Println("points from purchase date: ", points)
 	return points
 }
 
@@ -80,6 +76,5 @@ func getPointsFromPurchaseTime(receipt *Receipt) int {
 	if (hour == 14 && mins > 0) || (hour == 15) {
 		points += 10
 	}
-	log.Println("points from purchase time: ", points)
 	return points
 }
